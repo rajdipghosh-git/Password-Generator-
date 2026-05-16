@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator | By Rajdip Ghosh</title>
+    <meta name="description" content="A sleek, modern password generator built by Rajdip Ghosh. Generate secure passwords with custom length, uppercase, lowercase, numbers, and symbols.">
+    <meta name="author" content="Rajdip Ghosh">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Animated background orbs -->
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+
+    <main class="app" id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h1 class="header__title">Password Generator</h1>
+            <p class="header__subtitle">Create strong, secure passwords instantly</p>
+        </header>
+
+        <!-- Password Display -->
+        <div class="password-display" id="password-display">
+            <input type="text" id="display" class="password-display__input" placeholder="Click Generate…" readonly>
+            <button class="password-display__copy" id="copy-btn" title="Copy to clipboard" type="button">
+                <i class="fa-regular fa-copy"></i>
+                <span class="password-display__tooltip" id="copy-tooltip">Copied!</span>
+            </button>
+        </div>
+
+        <!-- Strength Indicator -->
+        <div class="strength" id="strength-section">
+            <span class="strength__label">Strength:</span>
+            <div class="strength__bars">
+                <div class="strength__bar" id="str-bar-1"></div>
+                <div class="strength__bar" id="str-bar-2"></div>
+                <div class="strength__bar" id="str-bar-3"></div>
+                <div class="strength__bar" id="str-bar-4"></div>
+            </div>
+            <span class="strength__text" id="strength-text">—</span>
+        </div>
+
+        <!-- Options Card -->
+        <div class="options-card">
+            <form id="form-submit">
+                <!-- Length Slider -->
+                <div class="option-group option-group--slider">
+                    <div class="option-group__header">
+                        <span class="option-group__label">Password Length</span>
+                        <span class="option-group__value count" id="length-value">12</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" name="range" value="12" id="slider" min="4" max="32" class="slider">
+                    </div>
+                </div>
+
+                <!-- Checkbox Options -->
+                <label class="option" for="capital" id="option-uppercase">
+                    <div class="option__info">
+                        <i class="fa-solid fa-font option__icon"></i>
+                        <span>Uppercase Letters</span>
+                    </div>
+                    <input type="checkbox" name="uppercase" id="capital" checked>
+                    <span class="option__toggle"></span>
+                </label>
+
+                <label class="option" for="small" id="option-lowercase">
+                    <div class="option__info">
+                        <i class="fa-solid fa-text-height option__icon"></i>
+                        <span>Lowercase Letters</span>
+                    </div>
+                    <input type="checkbox" name="lowercase" id="small" checked>
+                    <span class="option__toggle"></span>
+                </label>
+
+                <label class="option" for="num" id="option-numbers">
+                    <div class="option__info">
+                        <i class="fa-solid fa-hashtag option__icon"></i>
+                        <span>Numbers</span>
+                    </div>
+                    <input type="checkbox" name="numbers" id="num" checked>
+                    <span class="option__toggle"></span>
+                </label>
+
+                <label class="option" for="symbol" id="option-symbols">
+                    <div class="option__info">
+                        <i class="fa-solid fa-asterisk option__icon"></i>
+                        <span>Symbols</span>
+                    </div>
+                    <input type="checkbox" name="symbols" id="symbol">
+                    <span class="option__toggle"></span>
+                </label>
+
+                <!-- Generate Button -->
+                <button type="submit" id="btn" class="generate-btn">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Generate Password</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Crafted with <i class="fa-solid fa-heart footer__heart"></i> by <strong>Rajdip Ghosh</strong></p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

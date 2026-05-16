@@ -1,0 +1,636 @@
+/* ===================================
+   PASSWORD GENERATOR — PREMIUM UI
+   Designed by Rajdip Ghosh
+   =================================== */
+
+/* ---------- Design Tokens ---------- */
+:root {
+    --bg-primary: #0a0e1a;
+    --bg-card: rgba(15, 20, 40, 0.65);
+    --bg-card-border: rgba(99, 102, 241, 0.15);
+    --bg-input: rgba(10, 14, 30, 0.8);
+
+    --accent: #818cf8;
+    --accent-glow: rgba(129, 140, 248, 0.35);
+    --accent-vivid: #a78bfa;
+    --accent-btn-from: #6366f1;
+    --accent-btn-to: #a855f7;
+
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --red: #f87171;
+    --cyan: #22d3ee;
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--bg-card-border);
+    --shadow-glow: 0 0 40px var(--accent-glow);
+
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- Body ---------- */
+body {
+    font-family: var(--font);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ---------- Animated Background Orbs ---------- */
+.bg-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bg-orb--1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #6366f1, transparent 70%);
+    top: -120px;
+    left: -100px;
+    animation: orbFloat1 14s ease-in-out infinite;
+}
+
+.bg-orb--2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #a855f7, transparent 70%);
+    bottom: -80px;
+    right: -60px;
+    animation: orbFloat2 18s ease-in-out infinite;
+}
+
+.bg-orb--3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #22d3ee, transparent 70%);
+    top: 50%;
+    left: 60%;
+    animation: orbFloat3 12s ease-in-out infinite;
+}
+
+@keyframes orbFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, 40px) scale(1.15); }
+}
+
+@keyframes orbFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-50px, -60px) scale(1.1); }
+}
+
+@keyframes orbFloat3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-40px, 30px) scale(1.2); }
+}
+
+/* ---------- App Container ---------- */
+.app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    padding: 2rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Header ---------- */
+.header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.header__icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent-btn-from), var(--accent-btn-to));
+    border-radius: 16px;
+    font-size: 1.5rem;
+    color: #fff;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { box-shadow: 0 4px 20px var(--accent-glow); }
+    50% { box-shadow: 0 4px 35px var(--accent-glow), 0 0 60px rgba(99, 102, 241, 0.15); }
+}
+
+.header__title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--text-primary), var(--accent-vivid));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.03em;
+}
+
+.header__subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.35rem;
+    font-weight: 400;
+}
+
+/* ---------- Password Display ---------- */
+.password-display {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: var(--radius-lg);
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+}
+
+.password-display:hover,
+.password-display:focus-within {
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+
+.password-display__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--cyan);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 1rem 1.25rem;
+    min-width: 0;
+}
+
+.password-display__input::placeholder {
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.password-display__input::selection {
+    background: none;
+}
+
+.password-display__copy {
+    position: relative;
+    border: none;
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--accent);
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.password-display__copy:hover {
+    background: rgba(99, 102, 241, 0.25);
+    transform: scale(1.08);
+}
+
+.password-display__copy:active {
+    transform: scale(0.95);
+}
+
+.password-display__tooltip {
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--green);
+    color: #0a0e1a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.password-display__tooltip.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- Strength Indicator ---------- */
+.strength {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0 0.5rem;
+}
+
+.strength__label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.strength__bars {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+}
+
+.strength__bar {
+    height: 4px;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    transition: background 0.35s, box-shadow 0.35s;
+}
+
+.strength__bar.active-weak {
+    background: var(--red);
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
+}
+
+.strength__bar.active-fair {
+    background: var(--orange);
+    box-shadow: 0 0 8px rgba(251, 146, 60, 0.4);
+}
+
+.strength__bar.active-good {
+    background: var(--yellow);
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+.strength__bar.active-strong {
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+.strength__text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 52px;
+    text-align: right;
+    transition: color 0.3s;
+}
+
+/* ---------- Options Card ---------- */
+.options-card {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: var(--radius-xl);
+    padding: 1.75rem;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: var(--shadow-card);
+}
+
+#form-submit {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ---------- Slider Group ---------- */
+.option-group--slider {
+    margin-bottom: 1.5rem;
+}
+
+.option-group__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.option-group__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.option-group__value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-vivid);
+    background: linear-gradient(135deg, var(--accent), var(--accent-vivid));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    min-width: 36px;
+    text-align: right;
+}
+
+/* ---------- Range Slider ---------- */
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--accent-btn-from) 0%, var(--accent-btn-to) var(--slider-progress, 28.6%), rgba(255, 255, 255, 0.08) var(--slider-progress, 28.6%));
+    outline: none;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--accent-btn-from);
+    cursor: pointer;
+    transition: box-shadow 0.25s, transform 0.15s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--accent-btn-from), 0 0 0 10px rgba(99, 102, 241, 0.15);
+    transform: scale(1.1);
+}
+
+.slider:active::-webkit-slider-thumb {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--accent-btn-from), 0 0 0 14px rgba(99, 102, 241, 0.2);
+    transform: scale(1.15);
+}
+
+.slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 3px var(--accent-btn-from);
+    cursor: pointer;
+}
+
+/* ---------- Option Toggle Row ---------- */
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 0;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: var(--transition);
+    user-select: none;
+}
+
+.option:last-of-type {
+    border-bottom: none;
+}
+
+.option:hover {
+    padding-left: 0.25rem;
+}
+
+.option__info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.25s;
+}
+
+.option:hover .option__info {
+    color: var(--text-primary);
+}
+
+.option__icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--accent);
+    transition: var(--transition);
+}
+
+.option:hover .option__icon {
+    background: rgba(99, 102, 241, 0.15);
+}
+
+.option input[type="checkbox"] {
+    display: none;
+}
+
+/* Toggle Switch */
+.option__toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.option__toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+input[type="checkbox"]:checked ~ .option__toggle {
+    background: linear-gradient(135deg, var(--accent-btn-from), var(--accent-btn-to));
+}
+
+input[type="checkbox"]:checked ~ .option__toggle::after {
+    left: 23px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- Generate Button ---------- */
+.generate-btn {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--accent-btn-from), var(--accent-btn-to));
+    color: #fff;
+    font-family: var(--font);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    letter-spacing: 0.02em;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.generate-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+}
+
+.generate-btn:hover::before {
+    opacity: 1;
+}
+
+.generate-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+/* Button ripple animation on click */
+@keyframes btnRipple {
+    from {
+        transform: scale(0);
+        opacity: 0.4;
+    }
+    to {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding-top: 0.5rem;
+}
+
+.footer strong {
+    color: var(--accent-vivid);
+    font-weight: 700;
+}
+
+.footer__heart {
+    color: var(--red);
+    font-size: 0.7rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.15); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .app {
+        padding: 1.5rem 1rem;
+    }
+
+    .options-card {
+        padding: 1.25rem;
+        border-radius: var(--radius-lg);
+    }
+
+    .header__title {
+        font-size: 1.4rem;
+    }
+
+    .password-display__input {
+        font-size: 1rem;
+        padding: 0.85rem 1rem;
+    }
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 3px;
+}
